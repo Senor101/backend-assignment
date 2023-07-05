@@ -1,8 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma = require("../../../prisma/client");
 
 const throwError = require("../../utils/throwerror");
-
-const prisma = new PrismaClient();
 
 const getProducts = async (req, res, next) => {
   try {
