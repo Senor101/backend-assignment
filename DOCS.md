@@ -1,5 +1,11 @@
 # Sales Management API
 
+## Tech Stacks Used
+
+- Express
+- Postgresql
+- prisma
+
 ## Installation
 
 To install this Sales Management Api on your local system follow these steps:
@@ -42,7 +48,13 @@ _Instead of this you can directly use the api hosted on render._
  https://sales-management-api.onrender.com/api/v1
 ```
 
-## Rest API
+# Rest API
+
+The sample response body recived will contain:
+
+```js
+
+```
 
 The REST API for Sales Management Platform API is described below
 
@@ -53,6 +65,46 @@ The REST API for Sales Management Platform API is described below
 > ```bash
 > curl --location 'http://localhost:8000/api/v1/products'
 > ```
+
+### Response
+
+```json
+   "message": "Products fetched successfully",
+   "data": [
+       {
+           "id": 3,
+           "name": "Macbook air",
+           "description": "The new M2",
+           "price": 999.99,
+           "createdAt": "2023-07-06T09:44:27.600Z",
+           "updatedAt": "2023-07-06T09:44:27.600Z"
+       },
+       {
+           "id": 4,
+           "name": "Asus Zenboook",
+           "description": "With the new 13th gen cpu",
+           "price": 889.99,
+           "createdAt": "2023-07-06T09:45:00.220Z",
+           "updatedAt": "2023-07-06T09:45:00.220Z"
+       },
+       {
+           "id": 5,
+           "name": "Product 3",
+           "description": "Prodcut 3 is quite good",
+           "price": 45.99,
+           "createdAt": "2023-07-06T09:45:08.856Z",
+           "updatedAt": "2023-07-06T09:45:08.856Z"
+       },
+       {
+           "id": 2,
+           "name": "Iphone case",
+           "description": "Prodcut 2 is quite good",
+           "price": 19.99,
+           "createdAt": "2023-07-06T09:44:07.284Z",
+           "updatedAt": "2023-07-06T09:48:00.331Z"
+       }
+   ]
+```
 
 ## End-point: POST PRODUCTS
 
@@ -72,6 +124,22 @@ The REST API for Sales Management Platform API is described below
 }
 ```
 
+### Response
+
+```json
+{
+  "message": "Product created successfully",
+  "data": {
+    "id": 6,
+    "name": "Asus Zenboook",
+    "description": "With the new 13th gen cpu",
+    "price": 889.99,
+    "createdAt": "2023-07-06T16:09:36.236Z",
+    "updatedAt": "2023-07-06T16:09:36.236Z"
+  }
+}
+```
+
 ## End-point: GET PRODUCTS BY ID
 
 ### Method: GET
@@ -79,6 +147,22 @@ The REST API for Sales Management Platform API is described below
 > ```bash
 > curl --location 'http://localhost:8000/api/v1/products/product_id'
 > ```
+
+### Response
+
+```json
+{
+  "message": "Product fetched successfully",
+  "data": {
+    "id": 3,
+    "name": "Macbook air",
+    "description": "The new M2",
+    "price": 999.99,
+    "createdAt": "2023-07-06T09:44:27.600Z",
+    "updatedAt": "2023-07-06T09:44:27.600Z"
+  }
+}
+```
 
 ## End-point: DELETE PRODUCT
 
@@ -105,6 +189,22 @@ The REST API for Sales Management Platform API is described below
 }
 ```
 
+### Response
+
+```json
+{
+  "message": "Product updated successfully",
+  "data": {
+    "id": 2,
+    "name": "Iphone case",
+    "description": "Prodcut 2 is quite good",
+    "price": 19.99,
+    "createdAt": "2023-07-06T09:44:07.284Z",
+    "updatedAt": "2023-07-06T16:10:50.017Z"
+  }
+}
+```
+
 ## End-point: GET USERS
 
 ### Method: GET
@@ -112,6 +212,34 @@ The REST API for Sales Management Platform API is described below
 > ```bash
 > curl --location 'http://localhost:8000/api/v1/users'
 > ```
+
+### Response
+
+```json
+{
+  "message": "Users fetched successfully",
+  "data": [
+    {
+      "id": 1,
+      "name": "Test User",
+      "email": "test@gmail.com",
+      "password": "$2b$10$P5SKbT0jGALY0GRq1lsACO28h8.LQ.H.fQXY1FLkzeiggNOh.NQE6",
+      "isAdmin": false,
+      "createdAt": "2023-07-06T09:42:48.040Z",
+      "updatedAt": "2023-07-06T09:42:48.040Z"
+    },
+    {
+      "id": 2,
+      "name": "Admin User",
+      "email": "admin@gmail.com",
+      "password": "$2b$10$LDlDby0O6/2YcuVzh.7pvOsTGhV90cjvbBy4xI5BC6o.ZWzZuasRq",
+      "isAdmin": true,
+      "createdAt": "2023-07-06T09:42:58.283Z",
+      "updatedAt": "2023-07-06T09:42:58.283Z"
+    }
+  ]
+}
+```
 
 ## End-point: REGISTER USER
 
@@ -130,13 +258,6 @@ The REST API for Sales Management Platform API is described below
   "password": "NewUser",
   "isAdmin": true
 }
-
-// {
-//     "name" :"Test User",
-//     "email" : "test@gmail.com",
-//     "password" : "NewUser",
-//     "isAdmin" : false
-// }
 ```
 
 ## End-point: LOGIN USER
@@ -156,6 +277,23 @@ The REST API for Sales Management Platform API is described below
 }
 ```
 
+### Response
+
+```json
+{
+  "message": "User logged in successfully",
+  "data": {
+    "id": 2,
+    "name": "Admin User",
+    "email": "admin@gmail.com",
+    "password": "$2b$10$LDlDby0O6/2YcuVzh.7pvOsTGhV90cjvbBy4xI5BC6o.ZWzZuasRq",
+    "isAdmin": true,
+    "createdAt": "2023-07-06T09:42:58.283Z",
+    "updatedAt": "2023-07-06T09:42:58.283Z"
+  }
+}
+```
+
 ## End-point: LOGOUT USER
 
 ### Method: POST
@@ -171,6 +309,62 @@ The REST API for Sales Management Platform API is described below
 > ```bash
 > curl --location 'http://localhost:8000/api/v1/orders'
 > ```
+
+### Response
+
+```json
+{
+  "message": "Orders fetched successfully",
+  "data": [
+    {
+      "id": 2,
+      "createdAt": "2023-07-06T09:59:30.173Z",
+      "updatedAt": "2023-07-06T09:59:30.173Z",
+      "userId": 2,
+      "totalPrice": 2889.97,
+      "products": [
+        {
+          "id": 2,
+          "quantity": 2,
+          "productId": 3,
+          "orderId": 2,
+          "product": {
+            "id": 3,
+            "name": "Macbook air",
+            "description": "The new M2",
+            "price": 999.99,
+            "createdAt": "2023-07-06T09:44:27.600Z",
+            "updatedAt": "2023-07-06T09:44:27.600Z"
+          }
+        },
+        {
+          "id": 3,
+          "quantity": 1,
+          "productId": 4,
+          "orderId": 2,
+          "product": {
+            "id": 4,
+            "name": "Asus Zenboook",
+            "description": "With the new 13th gen cpu",
+            "price": 889.99,
+            "createdAt": "2023-07-06T09:45:00.220Z",
+            "updatedAt": "2023-07-06T09:45:00.220Z"
+          }
+        }
+      ],
+      "user": {
+        "id": 2,
+        "name": "Admin User",
+        "email": "admin@gmail.com",
+        "password": "$2b$10$LDlDby0O6/2YcuVzh.7pvOsTGhV90cjvbBy4xI5BC6o.ZWzZuasRq",
+        "isAdmin": true,
+        "createdAt": "2023-07-06T09:42:58.283Z",
+        "updatedAt": "2023-07-06T09:42:58.283Z"
+      }
+    }
+  ]
+}
+```
 
 ## End-point: POST ORDERS
 
