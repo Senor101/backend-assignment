@@ -11,7 +11,7 @@ const getOrders = async (req, res, next) => {
         userId: req.session.user.id,
       },
       include: {
-        order: { include: { product: true } },
+        products: { include: { product: true } },
         user: true,
       },
     });
@@ -32,7 +32,7 @@ const getOrderById = async (req, res, next) => {
         id: orderId,
       },
       include: {
-        order: { include: { product: true } },
+        products: { include: { product: true } },
         user: true,
       },
     });
@@ -63,17 +63,20 @@ const createOrder = async (req, res, next) => {
         },
       },
     });
+    if (productsInDb.length !== products.length) {
+      return throwError("Product not found", 404);
+    }
     let totalPrice = 0;
     products.forEach((product) => {
       const { id, quantity } = product;
       const fetchedProduct = productsInDb.find((product) => product.id === id);
-      totalPrice = totalPrice + fetchedProduct.price * quantity;
+      totalPrice = totalPrice + fetchedProduct.price * Number(quantity);
     });
 
     const newOrder = await prisma.order.create({
       data: {
         user: { connect: { id: req.session.user.id } },
-        order: {
+        products: {
           create: products.map((product) => ({
             quantity: product.quantity,
             product: { connect: { id: product.id } },
@@ -83,7 +86,7 @@ const createOrder = async (req, res, next) => {
       },
       include: {
         user: true,
-        order: true,
+        products: { include: { product: true } },
       },
     });
     return res.status(201).json({
@@ -113,7 +116,7 @@ const deleteOrder = async (req, res, next) => {
       where: {
         id: orderId,
       },
-      include: { order: true },
+      include: { products: true },
     });
     return res.status(200).json({
       message: "Order deleted successfully",
@@ -162,7 +165,7 @@ const updateOrder = async (req, res, next) => {
       },
       data: {
         user: { connect: { id: req.session.user.id } },
-        order: {
+        products: {
           create: products.map((product) => ({
             quantity: product.quantity,
             product: { connect: { id: product.id } },

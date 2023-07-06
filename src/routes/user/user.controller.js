@@ -4,7 +4,7 @@ const throwError = require("../../utils/throwerror");
 
 const getUsers = async (req, res, next) => {
   try {
-    const users = prisma.user.findMany();
+    const users = await prisma.user.findMany();
     res.status(200).json({
       message: "Users fetched successfully",
       data: users,

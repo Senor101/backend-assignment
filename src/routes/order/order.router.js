@@ -9,7 +9,7 @@ router.get("/", isAuthenticated, orderController.getOrders);
 
 router.get("/:id", isAuthenticated, orderController.getOrderById);
 
-router.post("/", orderController.createOrder);
+router.post("/", isAuthenticated, orderController.createOrder);
 
 router.delete("/:id", isAuthenticated, orderController.deleteOrder);
 
