@@ -11,7 +11,7 @@ const getOrders = async (req, res, next) => {
         userId: req.session.user.id,
       },
       include: {
-        order: true,
+        order: { include: { product: true } },
         user: true,
       },
     });
@@ -26,16 +26,21 @@ const getOrders = async (req, res, next) => {
 
 const getOrderById = async (req, res, next) => {
   try {
-    const orderId = req.params.id;
+    const orderId = Number(req.params.id);
     const order = await prisma.order.findUnique({
-      where: orderId,
+      where: {
+        id: orderId,
+      },
       include: {
-        products: true,
+        order: { include: { product: true } },
         user: true,
       },
     });
     if (!order) {
       return throwError("Order not found", 404);
+    }
+    if (order.userId !== req.session.user.id) {
+      return throwError("Unauthorized", 401);
     }
     return res.status(200).json({
       message: "Order fetched successfully",
@@ -78,7 +83,7 @@ const createOrder = async (req, res, next) => {
       },
       include: {
         user: true,
-        order: { include: { product: true } },
+        order: true,
       },
     });
     return res.status(201).json({
@@ -101,10 +106,14 @@ const deleteOrder = async (req, res, next) => {
     if (!order) {
       return throwError("Order not found", 404);
     }
+    if (order.userId !== req.session.user.id) {
+      return throwError("Unauthorized", 401);
+    }
     const deletedOrder = await prisma.order.delete({
       where: {
         id: orderId,
       },
+      include: { order: true },
     });
     return res.status(200).json({
       message: "Order deleted successfully",
@@ -126,27 +135,45 @@ const updateOrder = async (req, res, next) => {
     if (!order) {
       return throwError("Order not found", 404);
     }
-    const { productIds } = req.body;
-    const products = await prisma.product.findMany({
+    if (order.userId !== req.session.user.id) {
+      return throwError("Unauthorized", 401);
+    }
+    const { products } = req.body;
+
+    const productIds = products.map((product) => product.id);
+
+    const productsInDb = await prisma.product.findMany({
       where: {
         id: {
           in: productIds,
         },
       },
     });
-    const prices = products.reduce(
-      (total, product) => total + product.price,
-      0
-    );
-    totalPrice = parseFloat(prices.toFixed(2));
+    let totalPrice = 0;
+    products.forEach((product) => {
+      const { id, quantity } = product;
+      const fetchedProduct = productsInDb.find((product) => product.id === id);
+      totalPrice = totalPrice + fetchedProduct.price * quantity;
+    });
+
     const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
+      where: {
+        id: orderId,
+      },
       data: {
-        user: { connect: { id: user.id } },
-        products: { connect: productIds.map((id) => ({ id })) },
+        user: { connect: { id: req.session.user.id } },
+        order: {
+          create: products.map((product) => ({
+            quantity: product.quantity,
+            product: { connect: { id: product.id } },
+          })),
+        },
         totalPrice,
       },
-      include: { products: true },
+      include: {
+        user: true,
+        order: true,
+      },
     });
 
     return res.status(200).json({
