@@ -1,17 +1,18 @@
 const express = require("express");
 
 const router = express.Router();
+const { isAuthenticated } = require("../../middlewares/userAuth.middleware");
 
 const orderController = require("./order.controller");
 
-router.get("/", orderController.getOrders);
+router.get("/", isAuthenticated, orderController.getOrders);
 
-// router.get("/:id", orderController.getOrderById);
+router.get("/:id", isAuthenticated, orderController.getOrderById);
 
 router.post("/", orderController.createOrder);
 
-// router.delete("/:id", orderController.deleteOrder);
+router.delete("/:id", isAuthenticated, orderController.deleteOrder);
 
-// router.put("/:id", orderController.updateOrder);
+router.put("/:id", isAuthenticated, orderController.updateOrder);
 
 module.exports = router;
