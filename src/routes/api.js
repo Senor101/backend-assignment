@@ -10,6 +10,6 @@ const orderRouter = require("./order/order.router");
 
 router.use("/products", productRouter);
 
-// router.use("/orders", orderRouter);
+router.use("/orders", orderRouter);
 
 module.exports = router;
